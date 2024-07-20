@@ -1,9 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import ContactCard from "../contactcard/contactcard";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import "react-perfect-scrollbar/dist/css/styles.css";
+import { people } from "../../database/People";
 
 export default function Contacts() {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredContacts = people.filter(contact =>
+    contact.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="overview w-[30%] h-screen flex flex-col bg-gray-100 border-r border-gray-300">
       <div className="flex justify-between items-center p-4 bg-blue-500">
@@ -40,51 +47,20 @@ export default function Contacts() {
             className="w-full px-4 outline-none"
             type="text"
             placeholder="Search for someone"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
       </div>
       <PerfectScrollbar className="flex-1">
         <div className="overflow-y-auto p-2 space-y-2">
-          <ContactCard
-            name="Uzumaki Naruto"
-            imglink="https://wallpapers.com/images/hd/naruto-profile-pictures-392d311ouj6b7ggq.jpg"
-          />
-          <ContactCard
-            name="Sasuke Uchiha"
-            imglink="https://static.wikia.nocookie.net/naruto/images/2/21/Sasuke_Part_1.png"
-          />
-          <ContactCard
-            name="Itachi Uchiha"
-            imglink="https://staticg.sportskeeda.com/editor/2022/07/aedcf-16570135965843.png?w=840"
-          />
-          <ContactCard
-            name="Kakashi Hatake"
-            imglink="https://i.pinimg.com/474x/7f/c1/74/7fc174a2e88d4189cdad8ea71d099fb7.jpg"
-          />
-          <ContactCard
-            name="Sakura Haruno"
-            imglink="https://i.pinimg.com/736x/f5/62/18/f56218c71d25c89c0b4e2efa3b3d765d.jpg"
-          />
-          <ContactCard
-            name="Uzumaki Naruto"
-            imglink="https://wallpapers.com/images/hd/naruto-profile-pictures-392d311ouj6b7ggq.jpg"
-          />
-          <ContactCard
-            name="Sasuke Uchiha"
-            imglink="https://static.wikia.nocookie.net/naruto/images/2/21/Sasuke_Part_1.png"
-          />
-          <ContactCard
-            name="Itachi Uchiha"
-            imglink="https://staticg.sportskeeda.com/editor/2022/07/aedcf-16570135965843.png?w=840"
-          />
-          <ContactCard
-            name="Kakashi Hatake"
-            imglink="https://i.pinimg.com/474x/7f/c1/74/7fc174a2e88d4189cdad8ea71d099fb7.jpg"
-          />
-          <ContactCard
-            name="Sakura Haruno"
-            imglink="https://i.pinimg.com/736x/f5/62/18/f56218c71d25c89c0b4e2efa3b3d765d.jpg"
-          />
+          {filteredContacts.map((people, index) => (
+            <ContactCard
+              key={index}
+              name={people.name}
+              imglink={people.imglink}
+            />
+          ))}
         </div>
       </PerfectScrollbar>
     </div>

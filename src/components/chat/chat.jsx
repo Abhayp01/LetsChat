@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import "react-perfect-scrollbar/dist/css/styles.css";
 
 export default function Chat() {
   const [inputMsg, setInputMsg] = useState("");
   const [messages, setMessages] = useState([]);
+  const messagesEndRef = useRef(null);
 
   const handleChange = (e) => {
     setInputMsg(e.target.value);
@@ -23,23 +24,32 @@ export default function Chat() {
     }
   };
 
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
+
   return (
-    <div className=" w-[70%] bg-gradient-to-b from-gray-900 to-gray-800 flex flex-col h-screen">
-        <div className="messages  h-[90%] overflow-y-auto px-2">
-      <PerfectScrollbar>
-          <ul>
+    <div className="w-[70%] bg-gradient-to-b from-gray-700 to-gray-900 flex flex-col h-screen">
+      <div className="messages flex-1 overflow-y-auto p-4">
+        <PerfectScrollbar>
+          <ul className="space-y-2">
             {messages.map((msg, index) => (
-              <div className="bg-blue-400 w-fit mt-2 rounded-xl p-2">
-                <li key={index}>{msg}</li>
+              <div key={index} className="flex justify-start">
+                <div className="bg-blue-500 text-white w-fit max-w-xs break-words rounded-lg p-2">
+                  <li>{msg}</li>
+                </div>
               </div>
             ))}
+            <div ref={messagesEndRef} />
           </ul>
-      </PerfectScrollbar>
-        </div>
-      <div className="block">
-        <div className="fixed bg-gray-950 bottom-0 flex items-center w-full p-2 ">
+        </PerfectScrollbar>
+      </div>
+      <div className="p-2 bg-gray-800">
+        <div className="flex items-center w-full p-2 rounded-lg ">
           <input
-            className="outline-none rounded-full w-[60%] p-2 bg-slate-800 text-white pl-10"
+            className="flex-grow outline-none rounded-full p-2 bg-gray-600 text-white placeholder-gray-400 px-4"
             value={inputMsg}
             onChange={handleChange}
             onKeyDown={handleKeyDown}
@@ -48,7 +58,7 @@ export default function Chat() {
           />
           <button
             onClick={handleSend}
-            className="ml-2 p-2 px-3 bg-blue-500 hover:bg-blue-800 text-white rounded-xl"
+            className="ml-2 p-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-full"
             type="button"
           >
             Send
